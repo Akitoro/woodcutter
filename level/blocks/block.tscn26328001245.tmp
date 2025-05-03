@@ -1,0 +1,192 @@
+[gd_scene load_steps=8 format=3 uid="uid://dw0pmr3yl7bve"]
+
+[ext_resource type="Texture2D" uid="uid://2c0w5a0i1x8g" path="res://assets/woodblock.png" id="1_hhpuo"]
+
+[sub_resource type="GDScript" id="GDScript_covdq"]
+script/source = "extends Node2D
+
+class Info:
+	var neighbor : Node2D
+	var collision : CollisionShape2D
+	
+	func _init(neighbor, collision) -> void:
+		self.neighbor = neighbor
+		self.collision = collision
+	
+@onready var wood : CollisionShape2D = $Square2D/SquareCollision
+@onready var edges : Node2D = $Edges
+
+@onready var connections : Dictionary[Vector2i, Info] = {
+	Vector2i.UP : Info.new(null, $Edges/N/North),
+	Vector2i.DOWN : Info.new(null, $Edges/S/South),
+	Vector2i.RIGHT : Info.new(null, $Edges/E/East),
+	Vector2i.LEFT : Info.new(null, $Edges/W/West),
+}
+
+@export var is_selected : bool = false
+
+func calculated_size() -> Vector2:
+	return wood.shape.size * wood.scale
+	
+func _physics_process(delta: float) -> void:
+	if is_selected:
+		self.move(Vector2.ZERO, delta, [])
+	
+func _input(_event):
+	if wood.shape.get_rect().has_point(get_local_mouse_position()):
+		is_selected = Input.is_action_pressed(\"wd_leftclick\")
+		if Input.is_action_just_pressed(\"wd_rotate\"):
+			var center = self.global_position
+			self.rotated(center, [])
+	
+func rotated(rotation_center: Vector2, visited: Array[Node2D]):
+	visited.append(self)
+	
+	var rotation_transform : Transform2D = Transform2D(PI/2, rotation_center)
+	self.global_position = rotation_transform * (self.global_position - rotation_center)
+	self.rotate(PI/2)
+	for direction in connections.keys():
+		var neighbor = connections.get(direction).neighbor
+		if neighbor != null and neighbor not in visited:
+			neighbor.rotated(rotation_center, visited)
+	
+	#swap connections
+	var next : Dictionary[Vector2i, Info] = {}
+	for direction : Vector2i in connections.keys():
+		#90° degree rotation
+		var rotated_direction = Vector2i(-direction.y, direction.x)
+		next[rotated_direction] = connections.get(direction)
+	connections = next
+
+func move(offset: Vector2i, delta: float, visited: Array[Node2D]):
+	visited.append(self)
+	
+	var origin = self.global_position
+	var target = get_global_mouse_position()-Vector2(offset)*self.calculated_size()
+	self.global_position = lerp(origin, target, 25*delta)
+	
+	#Recursively visit all unvisited neighbors and update each position
+	for direction in connections.keys():
+		var neighbor = connections.get(direction)
+		if neighbor != null and neighbor not in visited:
+			neighbor.move(offset+direction, delta, visited)
+
+func _on_saw_cut_made(start: Vector2, end: Vector2) -> void:
+	for direction in connections.keys():
+		var collision : CollisionShape2D = connections.get(direction).collision
+		
+		var segment : SegmentShape2D = collision.shape
+		var from_b = $Edges.to_global(segment.a)
+		var to_b = $Edges.to_global(segment.b)
+		
+		if Geometry2D.segment_intersects_segment(start, end, from_b, to_b) != null:
+			print(\"intersection\", direction, self)
+			connections[-direction] = null
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hhpuo"]
+size = Vector2(128, 128)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_hhpuo"]
+a = Vector2(0, -40)
+b = Vector2(0, -96)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_tbtwp"]
+a = Vector2(32, 0)
+b = Vector2(96, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_8ys8s"]
+a = Vector2(0, 96)
+b = Vector2(0, 32)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_sti46"]
+a = Vector2(-32, 0)
+b = Vector2(-96, 0)
+
+[node name="Block" type="Node2D"]
+script = SubResource("GDScript_covdq")
+
+[node name="Square2D" type="Area2D" parent="."]
+
+[node name="SquareCollision" type="CollisionShape2D" parent="Square2D"]
+shape = SubResource("RectangleShape2D_hhpuo")
+
+[node name="WoodTexture" type="TextureRect" parent="Square2D/SquareCollision"]
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+texture = ExtResource("1_hhpuo")
+expand_mode = 1
+
+[node name="Edges" type="Node2D" parent="."]
+
+[node name="N" type="Area2D" parent="Edges"]
+
+[node name="North" type="CollisionShape2D" parent="Edges/N"]
+shape = SubResource("SegmentShape2D_hhpuo")
+disabled = true
+
+[node name="E" type="Area2D" parent="Edges"]
+
+[node name="East" type="CollisionShape2D" parent="Edges/E"]
+shape = SubResource("SegmentShape2D_tbtwp")
+disabled = true
+
+[node name="S" type="Area2D" parent="Edges"]
+
+[node name="South" type="CollisionShape2D" parent="Edges/S"]
+shape = SubResource("SegmentShape2D_8ys8s")
+disabled = true
+
+[node name="W" type="Area2D" parent="Edges"]
+
+[node name="West" type="CollisionShape2D" parent="Edges/W"]
+shape = SubResource("SegmentShape2D_sti46")
+disabled = true
+
+[node name="DebugLabels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="N" type="Label" parent="DebugLabels"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -64.0
+offset_right = 24.0
+offset_bottom = -41.0
+text = "N"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="E" type="Label" parent="DebugLabels"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = -24.0
+offset_right = 64.0
+offset_bottom = 24.0
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="W" type="Label" parent="DebugLabels"]
+layout_mode = 0
+offset_left = -64.0
+offset_top = -24.0
+offset_right = -40.0
+offset_bottom = 24.0
+text = "W"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="S" type="Label" parent="DebugLabels"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = 40.0
+offset_right = 24.0
+offset_bottom = 63.0
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1

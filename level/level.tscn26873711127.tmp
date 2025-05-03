@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dhvu3fm3bhmp6"]
+
+[ext_resource type="Script" uid="uid://bmgu6jlb0g8xk" path="res://level/level.gd" id="1_qohg2"]
+[ext_resource type="PackedScene" uid="uid://dw0pmr3yl7bve" path="res://level/blocks/block.tscn" id="2_5gx2l"]
+[ext_resource type="PackedScene" uid="uid://csm5o7vu3ad7" path="res://level/tools/saw.tscn" id="2_qohg2"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_qohg2")
+
+[node name="WoodBackground" type="TextureRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 645.0
+
+[node name="Saw" parent="." instance=ExtResource("2_qohg2")]
+
+[node name="Blocks" type="Node2D" parent="."]
+
+[node name="Block1" parent="Blocks" instance=ExtResource("2_5gx2l")]
+
+[node name="Block2" parent="Blocks" instance=ExtResource("2_5gx2l")]
+position = Vector2(128, 0)

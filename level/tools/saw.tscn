@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://csm5o7vu3ad7"]
+
+[ext_resource type="Script" uid="uid://hq7rmju5nheo" path="res://level/tools/saw.gd" id="1_grvq1"]
+
+[node name="Saw" type="Node2D"]
+script = ExtResource("1_grvq1")
+
+[node name="SawLine2D" type="Line2D" parent="."]
+position = Vector2(3, 0)
+points = PackedVector2Array(568, 10, 568, 622)
+default_color = Color(0.537011, 0.537011, 0.537011, 1)

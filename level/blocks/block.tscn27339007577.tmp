@@ -1,0 +1,102 @@
+[gd_scene load_steps=8 format=3 uid="uid://dw0pmr3yl7bve"]
+
+[ext_resource type="Texture2D" uid="uid://2c0w5a0i1x8g" path="res://assets/woodblock.png" id="1_hhpuo"]
+
+[sub_resource type="GDScript" id="GDScript_covdq"]
+script/source = "extends Node2D
+
+@onready var wood : CollisionShape2D = $Square2D/SquareCollision
+
+@export var connections : Dictionary[Vector2i, Node2D] = {
+	Vector2i.UP : null,
+	Vector2i.DOWN : null,
+	Vector2i.RIGHT : null,
+	Vector2i.LEFT : null,
+}
+@export var top : Node2D = null
+@export var bottom : Node2D = null
+@export var left : Node2D = null
+@export var right : Node2D = null
+
+@export var is_selected : bool = false
+
+func calculated_size() -> Vector2:
+	return wood.shape.size * wood.scale
+	
+func _process(delta: float) -> void:
+	if is_selected:
+		self.move(Vector2.ZERO, delta, [])
+	
+func _input(event):
+	if wood.shape.get_rect().has_point(get_local_mouse_position()):
+		is_selected = Input.is_action_pressed(\"wd_leftclick\")
+
+func move(offset: Vector2i, delta: float, visited: Array[Node2D]):
+	visited.append(self)
+	self.global_position = lerp(self.global_position+Vector2(offset)*wood.shape.size, get_global_mouse_position(), 25*delta)
+	for neighbor in connections.keys():
+		if connections.get(neighbor) != null and connections.get(neighbor) not in visited:
+			connections.get(neighbor).move(offset+neighbor, delta, visited)
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hhpuo"]
+size = Vector2(128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tbtwp"]
+size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sti46"]
+size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ys8s"]
+size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fk1v2"]
+size = Vector2(48, 48)
+
+[node name="WoodArea" type="Node2D"]
+script = SubResource("GDScript_covdq")
+
+[node name="Square2D" type="Area2D" parent="."]
+
+[node name="SquareCollision" type="CollisionShape2D" parent="Square2D"]
+shape = SubResource("RectangleShape2D_hhpuo")
+
+[node name="WoodTexture" type="TextureRect" parent="Square2D/SquareCollision"]
+visible = false
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+texture = ExtResource("1_hhpuo")
+expand_mode = 1
+
+[node name="Edges" type="Node2D" parent="."]
+
+[node name="BottomArea2D" type="Area2D" parent="Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edges/BottomArea2D"]
+position = Vector2(0, 64)
+shape = SubResource("RectangleShape2D_tbtwp")
+disabled = true
+
+[node name="RightArea2D" type="Area2D" parent="Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edges/RightArea2D"]
+position = Vector2(64, 0)
+shape = SubResource("RectangleShape2D_sti46")
+disabled = true
+
+[node name="LeftArea2D" type="Area2D" parent="Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edges/LeftArea2D"]
+position = Vector2(-64, 0)
+shape = SubResource("RectangleShape2D_8ys8s")
+disabled = true
+
+[node name="TopArea2D" type="Area2D" parent="Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edges/TopArea2D"]
+position = Vector2(0, -64)
+shape = SubResource("RectangleShape2D_fk1v2")
+disabled = true

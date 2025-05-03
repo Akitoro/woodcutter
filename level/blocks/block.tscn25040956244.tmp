@@ -1,0 +1,86 @@
+[gd_scene load_steps=8 format=3 uid="uid://dw0pmr3yl7bve"]
+
+[ext_resource type="Texture2D" uid="uid://2c0w5a0i1x8g" path="res://assets/woodblock.png" id="1_hhpuo"]
+
+[sub_resource type="GDScript" id="GDScript_covdq"]
+script/source = "extends Node2D
+
+@onready var wood : CollisionShape2D = $Area2D/CollisionShape2D
+
+@onready var top : Node2D = null
+@onready var bottom : Node2D = null
+@onready var left : Node2D = null
+@onready var right : Node2D = null
+
+@export var is_selected : bool = false
+
+func calculated_size() -> Vector2:
+	return wood.shape.size * wood.scale
+	
+func _process(delta: float) -> void:
+	if is_selected:
+		self.global_position = lerp(self.global_position, get_global_mouse_position(), 25*delta)
+	
+func _input(event):
+	if Input.is_action_pressed(\"wd_leftclick\"):
+		is_selected =  wood.shape.get_rect().has_point(get_local_mouse_position())
+		
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hhpuo"]
+size = Vector2(128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tbtwp"]
+size = Vector2(128, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sti46"]
+size = Vector2(24, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ys8s"]
+size = Vector2(24, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fk1v2"]
+size = Vector2(128, 24)
+
+[node name="WoodArea" type="Node2D"]
+script = SubResource("GDScript_covdq")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_hhpuo")
+disabled = true
+
+[node name="TextureRect" type="TextureRect" parent="Area2D/CollisionShape2D"]
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+texture = ExtResource("1_hhpuo")
+expand_mode = 1
+
+[node name="Edges" type="Node2D" parent="Area2D/CollisionShape2D"]
+
+[node name="BottomArea2D" type="Area2D" parent="Area2D/CollisionShape2D/Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D/CollisionShape2D/Edges/BottomArea2D"]
+position = Vector2(0, 52)
+shape = SubResource("RectangleShape2D_tbtwp")
+
+[node name="RightArea2D" type="Area2D" parent="Area2D/CollisionShape2D/Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D/CollisionShape2D/Edges/RightArea2D"]
+position = Vector2(52, 0)
+shape = SubResource("RectangleShape2D_sti46")
+
+[node name="LeftArea2D" type="Area2D" parent="Area2D/CollisionShape2D/Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D/CollisionShape2D/Edges/LeftArea2D"]
+position = Vector2(-52, 0)
+shape = SubResource("RectangleShape2D_8ys8s")
+
+[node name="TopArea2D" type="Area2D" parent="Area2D/CollisionShape2D/Edges"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D/CollisionShape2D/Edges/TopArea2D"]
+position = Vector2(0, -52)
+shape = SubResource("RectangleShape2D_fk1v2")
