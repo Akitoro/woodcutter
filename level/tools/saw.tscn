@@ -1,11 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://csm5o7vu3ad7"]
+[gd_scene load_steps=3 format=3 uid="uid://csm5o7vu3ad7"]
 
 [ext_resource type="Script" uid="uid://hq7rmju5nheo" path="res://level/tools/saw.gd" id="1_grvq1"]
+[ext_resource type="AudioStream" uid="uid://dq84sql7pqb3o" path="res://assets/saw_-_starninjas.ogg" id="2_rbm7h"]
 
 [node name="Saw" type="Node2D"]
 script = ExtResource("1_grvq1")
 
-[node name="SawLine2D" type="Line2D" parent="."]
-position = Vector2(3, 0)
-points = PackedVector2Array(568, 10, 568, 622)
-default_color = Color(0.537011, 0.537011, 0.537011, 1)
+[node name="Cuts" type="Node2D" parent="."]
+
+[node name="SawAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_rbm7h")
+volume_db = -2.879
+bus = &"SFX"
+parameters/looping = true

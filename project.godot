@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Woodcutter"
-run/main_scene="uid://dhvu3fm3bhmp6"
+run/main_scene="uid://dvdjc1rp2ic0e"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
