@@ -24,9 +24,9 @@ static var is_selected : Node2D = null
 func calculated_size() -> Vector2:
 	return wood.shape.size * wood.scale
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if is_selected == self:
-		self.move(Vector2.ZERO, delta, [])
+		self.move()
 	
 func _input(_event):
 	if wood.shape.get_rect().has_point(get_local_mouse_position()):
@@ -34,11 +34,11 @@ func _input(_event):
 			is_selected = self
 		elif not Input.is_action_pressed("wd_leftclick") and is_selected == self:
 			is_selected = null
-		if Input.is_action_just_pressed("wd_rotate"):
+		if Input.is_action_just_pressed("wd_rotate") and is_selected == self:
 			var center = self.global_position
-			self.rotated(center, [])
+			self.rotated(center)
 	
-func rotated(rotation_center: Vector2, visited: Array[Node2D]):
+func rotated(rotation_center: Vector2, visited: Array[Node2D]=[]):
 	visited.append(self)
 	
 	var rotation_transform : Transform2D = Transform2D(PI/2, rotation_center)
@@ -52,21 +52,23 @@ func rotated(rotation_center: Vector2, visited: Array[Node2D]):
 	#swap connections
 	var next : Dictionary[Vector2i, Info] = {}
 	for direction : Vector2i in connections.keys():
-		#90° degree rotation
+		#90° degree rotation clockwise
 		var rotated_direction = Vector2i(-direction.y, direction.x)
+		#90° degree rotation counterclockwise
+		#var rotated_direction = Vector2i(direction.y, -direction.x)
 		next[rotated_direction] = connections.get(direction)
 	connections = next
 
-func move(offset: Vector2i, delta: float, visited: Array[Node2D]):
+func move(to: Vector2=get_global_mouse_position(), offset: Vector2i=Vector2i.ZERO, delta: float=0.0, visited: Array[Node2D]=[]):
 	visited.append(self)
-	var target =  get_global_mouse_position()-Vector2(offset)*self.calculated_size()
+	var target = to-Vector2(offset)*self.calculated_size()
 	self.global_position = target
 	
 	#Recursively visit all unvisited neighbors and update each position
 	for direction in connections.keys():
 		var neighbor = connections.get(direction).neighbor
 		if neighbor != null and neighbor not in visited:
-			neighbor.move(offset+direction, delta, visited)
+			neighbor.move(to, offset+direction, delta, visited)
 
 func _on_saw_cut_made(start: Vector2, end: Vector2) -> void:
 	for direction in connections.keys():

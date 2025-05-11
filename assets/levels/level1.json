@@ -1,0 +1,41 @@
+{	
+	"name" : "Donut",
+	"description" : "Insert Description here",
+	"total_cuts" : 3,
+	"start" : [
+		{
+			"components": [
+				[0, 0],
+				[0, 1],
+				[0, 2],
+				[1, 0],
+				[1, 2],
+				[2, 0],
+				[2, 1],
+				[2, 2]
+			]
+		}
+	],
+	"goal" : [
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		}
+	]
+}

@@ -2,12 +2,9 @@ extends Node2D
 
 enum GameState {STATE_MENU, STATE_PLAY}
 
-@onready var menu = $Menu
-@onready var level = $Level
-
-@onready var game_scenes : Dictionary[GameState, Object] = {
-	GameState.STATE_MENU : menu,
-	GameState.STATE_PLAY : level,
+@onready var game_scenes : Dictionary[GameState, Node] = {
+	GameState.STATE_MENU : $Menu,
+	GameState.STATE_PLAY : $Level,
 }
 
 @onready var current_state : GameState = GameState.STATE_MENU :

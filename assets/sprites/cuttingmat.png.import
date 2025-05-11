@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2c0w5a0i1x8g"
-path="res://.godot/imported/woodblock.png-5eaea88926533bd1973cd98e72ff8471.ctex"
+uid="uid://3uytjxbt4rm5"
+path="res://.godot/imported/cuttingmat.png-c689ad41d21e192d554c802a9b1e062f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/woodblock.png"
-dest_files=["res://.godot/imported/woodblock.png-5eaea88926533bd1973cd98e72ff8471.ctex"]
+source_file="res://assets/sprites/cuttingmat.png"
+dest_files=["res://.godot/imported/cuttingmat.png-c689ad41d21e192d554c802a9b1e062f.ctex"]
 
 [params]
 

@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpdgyr7jx5l8y"]
+[gd_scene load_steps=9 format=3 uid="uid://cpdgyr7jx5l8y"]
 
 [ext_resource type="Script" uid="uid://cj0kbm2gf20ce" path="res://gui/menu.gd" id="1_0n48u"]
 [ext_resource type="Texture2D" uid="uid://cskbcrrnkx4p6" path="res://assets/icons/Gear.svg" id="2_0n48u"]
 [ext_resource type="Texture2D" uid="uid://b5l0wbcbalt4t" path="res://assets/icons/Exit.svg" id="3_3hl5a"]
+[ext_resource type="Texture2D" uid="uid://2c0w5a0i1x8g" path="res://assets/sprites/woodblock.png" id="4_ijvwb"]
 [ext_resource type="Texture2D" uid="uid://dmvpfxnmdilj7" path="res://assets/icons/Info.svg" id="4_vd72o"]
+[ext_resource type="Texture2D" uid="uid://djypotnyj6ubd" path="res://assets/sprites/sawblade.png" id="5_vd72o"]
+[ext_resource type="Script" uid="uid://dr3iyu68xfnck" path="res://gui/saw_blade.gd" id="6_o6i5c"]
+[ext_resource type="Theme" uid="uid://txi6gmorkaap" path="res://assets/woodcutter_theme.tres" id="7_heart"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -14,12 +18,29 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0n48u")
 
+[node name="Animation" type="Node2D" parent="."]
+position = Vector2(576, 320)
+
+[node name="SawBlade" type="Sprite2D" parent="Animation"]
+position = Vector2(0, 232)
+scale = Vector2(3, 3)
+texture = ExtResource("5_vd72o")
+script = ExtResource("6_o6i5c")
+
+[node name="TextureRect" type="TextureRect" parent="Animation"]
+offset_left = -576.0
+offset_top = 232.0
+offset_right = 576.0
+offset_bottom = 328.0
+texture = ExtResource("4_ijvwb")
+expand_mode = 1
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 0
-offset_left = 152.0
-offset_top = 64.0
-offset_right = 515.0
-offset_bottom = 576.0
+offset_left = 64.0
+offset_top = 32.0
+offset_right = 448.0
+offset_bottom = 512.0
 
 [node name="LevelScrollContainer" type="ScrollContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -53,5 +74,26 @@ offset_top = 576.0
 offset_right = 1016.0
 offset_bottom = 632.0
 texture_normal = ExtResource("4_vd72o")
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.001
+anchor_right = 0.001
+offset_left = 568.848
+offset_top = 27.0
+offset_right = 1085.85
+offset_bottom = 139.0
+grow_horizontal = 2
+theme = ExtResource("7_heart")
+theme_override_font_sizes/font_size = 120
+text = "WOODCUTTER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AdditionalInfoLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
 
 [connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

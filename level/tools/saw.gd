@@ -7,6 +7,7 @@ extends Node2D
 @export var current_cuts : int = total_cuts :
 	set(value):
 		current_cuts = clampi(value, 0, total_cuts)
+		
 
 @export var is_selected : bool = false
 
@@ -15,7 +16,7 @@ var saw_line : Line2D = Line2D.new()
 signal cut_made(start : Vector2, end : Vector2)
 
 func _input(_event: InputEvent) -> void:
-	if Input.is_action_pressed("wd_rightclick") and current_cuts > 0:
+	if Input.is_action_pressed("wd_rightclick") and self.current_cuts > 0:
 		if !is_selected:
 			saw_line = Line2D.new()
 			is_selected = true
@@ -27,10 +28,11 @@ func _input(_event: InputEvent) -> void:
 		if is_selected:
 			is_selected=false
 			sound_player.stop()
+			current_cuts -= 1
 			cut_made.emit(saw_line.get_point_position(0), saw_line.get_point_position(1))
 			for child in cuts.get_children():
 				child.queue_free()
-			current_cuts -= 1
+			
 
 func _process(_delta: float) -> void:
 	if is_selected:

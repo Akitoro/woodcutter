@@ -1,0 +1,41 @@
+{	
+	"name" : "Complicated",
+	"description" : "Insert Description here",
+	"total_cuts" : 3,
+	"start" : [
+		{
+			"components": [
+				[0,0],
+				[1,1],
+				[2,2],
+				[3,3],
+				[1,2],
+				[2,1],
+				[0,1],
+				[3,2]
+			]
+		}
+	],
+	"goal" : [
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		},
+		{
+			"components": [
+				[0, 0]
+			]
+		}
+	]
+}
