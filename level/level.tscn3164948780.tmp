@@ -1,0 +1,93 @@
+[gd_scene load_steps=9 format=3 uid="uid://dhvu3fm3bhmp6"]
+
+[ext_resource type="Script" uid="uid://bmgu6jlb0g8xk" path="res://level/level.gd" id="1_qohg2"]
+[ext_resource type="Texture2D" uid="uid://2c0w5a0i1x8g" path="res://assets/sprites/woodblock.png" id="2_ktfr2"]
+[ext_resource type="PackedScene" uid="uid://csm5o7vu3ad7" path="res://level/tools/saw.tscn" id="2_qohg2"]
+[ext_resource type="Texture2D" uid="uid://3uytjxbt4rm5" path="res://assets/sprites/cuttingmat.png" id="5_ktfr2"]
+[ext_resource type="Theme" uid="uid://txi6gmorkaap" path="res://assets/woodcutter_theme.tres" id="6_44x8d"]
+[ext_resource type="Texture2D" uid="uid://cwfr6onwsfl0e" path="res://assets/icons/Home.svg" id="7_0v1st"]
+[ext_resource type="Texture2D" uid="uid://dwfju506dx11" path="res://assets/icons/Repeat-Right.svg" id="7_ivpvi"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vkbyq"]
+font_size = 32
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_qohg2")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="WoodTable" type="TextureRect" parent="Control"]
+visible = false
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_ktfr2")
+
+[node name="CuttingMat" type="TextureRect" parent="Control"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 1088.0
+offset_bottom = 576.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_ktfr2")
+
+[node name="Blocks" type="Node2D" parent="."]
+position = Vector2(192, 128)
+
+[node name="Saw" parent="." instance=ExtResource("2_qohg2")]
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD"]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 16.0
+offset_right = 1128.0
+offset_bottom = 88.0
+theme = ExtResource("6_44x8d")
+show_percentage = false
+
+[node name="CutLabel" type="Label" parent="HUD/ProgressBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.405
+anchor_bottom = 0.636
+offset_right = 176.12
+offset_bottom = 29.12
+text = "Cuts: 3"
+label_settings = SubResource("LabelSettings_vkbyq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResetButton" type="TextureButton" parent="HUD"]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 24.0
+offset_right = 816.0
+offset_bottom = 80.0
+theme = ExtResource("6_44x8d")
+texture_normal = ExtResource("7_ivpvi")
+stretch_mode = 0
+
+[node name="HomeButton" type="TextureButton" parent="HUD"]
+layout_mode = 0
+offset_left = 688.0
+offset_top = 24.0
+offset_right = 744.0
+offset_bottom = 80.0
+texture_normal = ExtResource("7_0v1st")
+
+[connection signal="cut_made" from="Saw" to="." method="_on_saw_cut_made"]
+[connection signal="pressed" from="HUD/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="HUD/HomeButton" to="." method="_on_home_button_pressed"]

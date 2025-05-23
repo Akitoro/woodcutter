@@ -27,4 +27,4 @@ func _on_exit_button_pressed() -> void:
 	self.get_tree().quit()
 
 func on_level_hovered(level : Data.LevelData) -> void:
-	print(level.id)
+	pass

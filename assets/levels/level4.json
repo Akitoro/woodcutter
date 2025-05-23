@@ -1,0 +1,27 @@
+{	
+	"name" : "Test for 2 comps",
+	"description" : "Insert Description here",
+	"total_cuts" : 2,
+	"start" : [
+		{
+			"components": [
+				[0, 0],
+				[0, 1],
+				[1, 0],
+				[1, 1]
+			]
+		}
+	],
+	"goal" : [
+		{
+			"components": [
+				[0, 0], [0, 1]
+			]
+		},
+		{
+			"components": [
+				[0, 0], [0, 1]
+			]
+		},
+	]
+}

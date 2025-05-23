@@ -59,6 +59,16 @@ func rotated(rotation_center: Vector2, visited: Array[Node2D]=[]):
 		next[rotated_direction] = connections.get(direction)
 	connections = next
 
+func get_component(cumulative: Array[Variant]=[], offset:Vector2i=Vector2i.ZERO, positions:Array[Vector2i]=[]) -> Array[Variant]:
+	cumulative.append(self)
+	positions.append(offset)
+	for key in connections.keys():
+		var info : Info = connections[key]
+		if info.neighbor != null && info.neighbor not in cumulative:
+			info.neighbor.get_component(cumulative, offset+key, positions)
+	return cumulative
+	
+
 func move(to: Vector2=get_global_mouse_position(), offset: Vector2i=Vector2i.ZERO, delta: float=0.0, visited: Array[Node2D]=[]):
 	visited.append(self)
 	var target = to-Vector2(offset)*self.calculated_size()

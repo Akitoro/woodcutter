@@ -18,3 +18,5 @@ enum GameState {STATE_MENU, STATE_PLAY}
 		
 func _ready() -> void:
 	current_state = GameState.STATE_MENU
+	print(Util.get_normalizations([Vector2i(1,1), Vector2i(2,2)]))
+	print(Util.get_rotations(Util.get_normalizations([Vector2i(1,1), Vector2i(2,2)])))
